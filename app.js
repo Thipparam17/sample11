@@ -79,15 +79,17 @@ app.get('/matches/:matchId/', async (request, response) => {
 
 app.get('/players/:playerId/matches', async (request, response) => {
   const {playerId} = request.params
-  const selctquery = `select * from player_match_score natural join match_details where player_id
+  const selctquery = `select player_match_score.match_id as matchId , match_details.match as match ,
+  match_details.year as year from
+  player_match_score natural join match_details where player_match_score.player_id
   =${playerId}`
   const player = await db.all(selctquery)
-  response.send(player.map(each => matchscore(each)))
+  response.send(player)
 })
 
 app.get('/matches/:matchId/players', async (request, response) => {
   const {matchId} = request.params
-  const selctquery = `select player_details.player_id as PlayerId,
+  const selctquery = `select player_details.player_id as playerId,
   player_details.player_name as playerName from player_match_score natural join player_details
    where match_id
   =${matchId}`
@@ -100,11 +102,11 @@ app.get('/players/:playerId/playerScores', async (request, response) => {
   const playerQuery = `
   select player_details.player_id as playerId,
   player_details.player_name as playerName,
-  sum(player_match_score) as totalScore,
+  sum(player_match_score.score) as totalScore,
   sum(fours) as totalFours,
   sum(sixes) as totalSixes from player_details inner join player_match_score on
   player_details.player_id=player_match_score.player_id 
-  where player_deatails.player_id=${playerId} `
+  where player_details.player_id=${playerId} `
   const play = await db.get(playerQuery)
   response.send(play)
 })

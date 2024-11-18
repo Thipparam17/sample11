@@ -14,9 +14,9 @@ Content-Type:application/json
 get http://localhost:3000/matches/:matchId/
 
 ###
-get http://localhost:3000/players/:playerId/matches
+get http://localhost:3000/players/3/matches
 
 ###
-get http://localhost:3000/matches/:matchId/players
+get http://localhost:3000/matches/3/players
 ###
 get http://localhost:3000/players/2/playerScores
